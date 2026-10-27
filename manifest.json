@@ -1,0 +1,18 @@
+{
+  "name": "Career Survival Agent",
+  "version": "0.1.0",
+  "description": "A single-agent JiuwenSwarm agent for the TechArena Career Survival simulation.",
+  "language": "English",
+  "skills": [
+    {
+      "name": "career_survival",
+      "path": "skills/career_survival.md",
+      "description": "A cautious, state-aware policy for workplace events and quarterly career decisions."
+    }
+  ],
+  "runtime": {
+    "platform": "JiuwenSwarm",
+    "version": "0.2.4b3",
+    "mode": "agent"
+  }
+}
