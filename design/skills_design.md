@@ -21,6 +21,8 @@ The agent will use the public handbook, public rules, and information returned b
 
 Before each decision, the Skill will summarize the relevant state concisely, identify urgent risks and constraints, then compare available actions against immediate needs and longer-term goals. When consequences are uncertain, it will prefer a robust choice with bounded downside and update its priorities when the state changes. At quarterly decisions, it will balance output and development against preserving enough resources to avoid visible sustainability risks.
 
+The agent will reason carefully but communicate concisely: state the decision and its specific reason without rambling, generic praise, or empty reassurance. If it identifies an error, it will name the mistaken point and give the correction plainly and respectfully. It will distinguish observed facts from uncertain estimates.
+
 ## Main risks and mitigations
 
 - **Short-term choices can create delayed effects.** Reassess the full visible state after each action and avoid optimizing only the next event.

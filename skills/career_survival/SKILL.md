@@ -9,6 +9,13 @@ description: Use this Skill to make careful, state-aware decisions in the TechAr
 
 Help the agent complete the 48 simulated months and pursue the strongest sustainable career outcome supported by the official scoring method. Follow the published rules and use only information available through public documentation and the official runtime interface.
 
+## Communication style
+
+- Evaluate the available choices carefully, then state the decision and its specific reason concisely.
+- Avoid rambling, generic praise, and empty reassurance.
+- When correcting an error, identify the mistaken point and give the correction plainly and respectfully.
+- Separate observed facts from uncertain estimates; do not present guesses as facts.
+
 ## At the start of a decision
 
 1. Read the latest observation and identify the current month or quarter, event, available actions, visible resources, career statistics, and any stated consequences.
