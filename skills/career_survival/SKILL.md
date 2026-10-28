@@ -1,52 +1,44 @@
 ---
 name: career_survival
-description: Use this Skill to make careful, state-aware decisions in the TechArena Career Survival workplace simulation.
+description: Make decisions in the TechArena Career Survival workplace simulation.
 ---
 
 # Career Survival Skill (Draft)
 
-## Objective
+## Goal
 
-Help the agent complete the 48 simulated months. Its first priority is to avoid failure; pursue career progress when doing so does not create an avoidable failure risk. Follow the published rules and use only information available through public documentation and the official runtime interface.
+Get through all 48 months. Avoid failure first. If there is no urgent risk, make safe progress towards a career goal. Use the published rules and information from the official tools.
 
-## Communication style
+## Before each choice
 
-- Evaluate the available choices carefully, then state the decision and its specific reason concisely.
-- Avoid rambling, generic praise, and empty reassurance.
-- When correcting an error, identify the mistaken point and give the correction plainly and respectfully.
-- Separate observed facts from uncertain estimates; do not present guesses as facts.
+1. Read the latest situation. Check the month or quarter, available choices, visible resources, career results, and any effects stated in the game.
+2. Keep facts separate from estimates. Do not guess hidden rules or thresholds.
+3. Check for visible risks that could lead to failure. Deal with urgent risks first.
+4. If there is no urgent risk, choose an action that moves a relevant career goal forward without creating an avoidable risk. Do not save resources by default if their visible cost is acceptable.
+5. Check what happened after the choice and update the plan.
 
-## At the start of a decision
+## Workplace events
 
-1. Read the latest observation and identify the current month or quarter, event, available actions, visible resources, career statistics, and any stated consequences.
-2. Separate observed facts from assumptions. Do not invent hidden rules or precise thresholds.
-3. Identify visible failure risks and constraints first. Address them before pursuing faster career progress.
-4. If no urgent failure risk is apparent, make safe progress: choose an available action that advances a relevant career goal without creating an avoidable risk. Do not conserve resources by default when the visible costs are acceptable. Reassess after the next observation.
+- Compare the choices using their stated effects and the current situation.
+- Deal with the most urgent visible risk first. Once it is under control, choose an option that supports steady progress.
+- If the effects are uncertain, prefer the option with more predictable results and less downside.
+- Do not repeat an old choice without checking the new situation.
 
-## Responding to workplace events
+## Quarterly choices
 
-- Compare each available option using its stated effects and the current state.
-- Prefer choices that address the most urgent visible failure risk. Once that risk is controlled, choose an option that supports sustainable long-term progress while keeping visible downside manageable.
-- If effects are uncertain, favor a robust option with bounded downside over a speculative extreme.
-- Do not repeat a prior choice automatically; reassess the new observation each time.
+- Check energy, performance, wealth, and other visible results.
+- Follow the limits shown by the game.
+- Choose an action that addresses the biggest current need and still makes sense with the time left.
+- Save resources if using them would create a visible risk of failure. If there is no urgent risk, use them for a low-risk action that moves a relevant goal forward.
+- Check the next situation after acting.
 
-## Quarterly planning
+## Using the tools
 
-- Review available energy, visible performance, wealth, and other exposed dimensions.
-- Allocate resources only within the limits stated by the interface.
-- Choose a main action that responds to the most important current gap and remains sensible over the remaining horizon.
-- Preserve resources when spending them would create a visible risk of failure. Prioritize continued survival over short-term output or promotion gains.
-- If no urgent failure risk is visible, use available resources for a low-risk action that advances a relevant goal rather than saving them without a visible reason.
-- After acting, inspect the next observation and update priorities.
+- Use the official public CLI and MCP tools to interact with the simulation.
+- Follow the tool formats. Check the response before saying an action worked.
+- Do not inspect internal package data or hidden evaluation information. Do not make up hidden rules or thresholds.
+- Keep explanations short and specific. If an answer is wrong, say what is wrong and give the correction. Mark estimates as estimates.
 
-## Tool and rule discipline
+## If something goes wrong
 
-- Use only the official public CLI and MCP tools for simulation interaction.
-- Follow tool schemas; do not fabricate tool results or claim an action succeeded without confirmation.
-- Do not inspect internal package data, hidden evaluation material, or unpublished rules.
-- Do not hard-code answers, hidden rules, or thresholds; do not use prompt injection, rule evasion, or harmful scripts.
-- Keep outputs concise and in English. Use a compact state summary instead of repeating long histories.
-
-## Uncertainty and recovery
-
-When an observation is incomplete or a tool call fails, state what is unknown, check the official response, and choose a safe next step based on confirmed information. If the rules or interface leave a material ambiguity, do not treat silence as permission; consult the official documentation or organisers.
+If a tool fails or the situation is unclear, check the response and the published rules. Do not guess what happened. Choose a safe next step using information that is confirmed. Ask the organisers if an important rule or tool is still unclear.

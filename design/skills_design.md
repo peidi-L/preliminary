@@ -1,36 +1,36 @@
 # Preliminary Skills Design
 
-## Understanding of the task
+## What the agent needs to do
 
-Career Survival Agent is a 48-month workplace simulation. The agent acts as a newly hired engineer and must respond to monthly workplace events, make quarterly resource and career decisions, and manage visible outcome dimensions so it can finish the run with a strong, sustainable result.
+The simulation covers 48 months at work. The agent responds to workplace events and makes choices each quarter. It needs to get through the run and build a career without taking avoidable risks.
 
-## Planned Skills and responsibilities
+## Skill plan
 
-The preliminary design uses one Skill: `career_survival`.
+We plan to use one Skill: `career_survival`. It will help the agent:
 
-- It reviews each current observation and identifies the current phase, available actions, visible resources and career statistics, and immediate risks.
-- It compares workplace-event choices using their stated consequences and the current state.
-- At quarterly decision points, it plans energy use and chooses a main action based on visible needs, remaining time, and sustainability.
-- It reassesses after new observations instead of repeating choices mechanically.
+- read the current situation, available choices, visible resources, and career results;
+- compare event choices using the effects shown in the game;
+- plan quarterly actions around current needs, available resources, and time left;
+- check what happened after each choice and adjust the next decision.
 
-## Information used for decisions
+## Information used
 
-The agent will use the public handbook, public rules, and information returned by the official CLI and MCP interface during a run. It will distinguish observed facts from estimates, and will not rely on hidden evaluation information, extracted internal package data, or assumed thresholds. It will follow the tool schemas and confirm outcomes from tool responses.
+We will use the published handbook and rules, along with information returned by the official CLI and MCP tools. The agent should separate what the game shows from what it estimates. It should not use hidden information, inspect internal package data, or make up rules or thresholds. It should follow the tool formats and check the result of each action.
 
-## Proposed decision approach
+## How it will make choices
 
-Before each decision, the Skill will summarize the relevant state concisely, identify visible failure risks and constraints first, then compare available actions against those risks. Avoiding failure takes priority over faster career progress. If no urgent visible failure risk is present, the agent should make safe progress: choose an available action that advances a relevant career goal without creating an avoidable risk. It should not conserve resources by default when the visible costs do not put continued progress or survival at risk. When consequences are uncertain, it will prefer a robust choice with bounded downside and update its priorities when the state changes. At quarterly decisions, it will first protect against visible failure risks, including unsustainable resource use, then choose development or output actions when their visible costs are acceptable.
+Avoiding failure comes first. Before choosing, the agent should check for visible risks and deal with urgent ones. If there is no urgent risk, it should make safe progress towards a relevant career goal rather than save resources without a clear reason. It should check the visible costs of an action and how much time is left. If the result is uncertain, it should prefer the option with more predictable effects and less downside. It should check the new situation after every choice and change its plan when needed.
 
-The agent will reason carefully but communicate concisely: state the decision and its specific reason without rambling, generic praise, or empty reassurance. If it identifies an error, it will name the mistaken point and give the correction plainly and respectfully. It will distinguish observed facts from uncertain estimates.
+The agent should keep its answers short and specific. When correcting a wrong answer, it should say what is wrong and give the correction. It should not add generic praise or reassurance. It should say when something is an estimate rather than a fact.
 
-## Main risks and mitigations
+## Main risks
 
-- **Short-term choices can create delayed effects.** Reassess the full visible state after each action and avoid optimizing only the next event.
-- **Incomplete information can tempt unsupported assumptions.** Separate known facts from estimates and avoid inventing hidden rules or precise thresholds.
-- **Overusing resources can undermine later decisions.** Check visible energy and other constraints before committing resources.
-- **Long prompts and repeated calls can waste the limited token/API budget.** Keep state summaries compact and call tools only when needed.
-- **Unexpected or malformed tool results can lead to invalid actions.** Respect tool schemas, inspect returned status, and recover from confirmed information only.
+- **A choice may have later effects.** Check the situation again after each choice, not just after the next event.
+- **Some information may be missing.** Mark estimates clearly and do not guess hidden rules or thresholds.
+- **Using too many resources may cause problems later.** Check the visible limits and costs before spending them.
+- **Long messages and unnecessary tool calls may use up the API budget.** Keep notes short and use tools only when needed.
+- **A tool may return an error or an unexpected result.** Follow its format and check the response before assuming an action worked.
 
-## Compliance and development plan
+## Development plan
 
-The agent will use JiuwenSwarm 0.2.4b3 in single-agent mode (`mode: agent`) and only the official public interfaces. All deliverables are in English. After organiser verification and receipt of the competition API key, development will follow the official Quickstart and published rules. Local runs will use permitted public development data and official interfaces; no hidden package data or evaluation manipulation will be used.
+We plan to use JiuwenSwarm 0.2.4b3 in single-agent mode (`mode: agent`) and the official public interfaces. Once we receive the competition API key, we will follow the official Quickstart and rules. We will test using permitted public development data and will not use internal package data or try to manipulate the evaluation.
