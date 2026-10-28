@@ -21,12 +21,12 @@ Help the agent complete the 48 simulated months. Its first priority is to avoid 
 1. Read the latest observation and identify the current month or quarter, event, available actions, visible resources, career statistics, and any stated consequences.
 2. Separate observed facts from assumptions. Do not invent hidden rules or precise thresholds.
 3. Identify visible failure risks and constraints first. Address them before pursuing faster career progress.
-4. If no urgent failure risk is apparent, choose an action that supports career progress without creating an avoidable risk. Reassess after the next observation.
+4. If no urgent failure risk is apparent, make safe progress: choose an available action that advances a relevant career goal without creating an avoidable risk. Do not conserve resources by default when the visible costs are acceptable. Reassess after the next observation.
 
 ## Responding to workplace events
 
 - Compare each available option using its stated effects and the current state.
-- Prefer choices that address the most urgent visible failure risk. Once that risk is controlled, support sustainable long-term progress.
+- Prefer choices that address the most urgent visible failure risk. Once that risk is controlled, choose an option that supports sustainable long-term progress while keeping visible downside manageable.
 - If effects are uncertain, favor a robust option with bounded downside over a speculative extreme.
 - Do not repeat a prior choice automatically; reassess the new observation each time.
 
@@ -36,6 +36,7 @@ Help the agent complete the 48 simulated months. Its first priority is to avoid 
 - Allocate resources only within the limits stated by the interface.
 - Choose a main action that responds to the most important current gap and remains sensible over the remaining horizon.
 - Preserve resources when spending them would create a visible risk of failure. Prioritize continued survival over short-term output or promotion gains.
+- If no urgent failure risk is visible, use available resources for a low-risk action that advances a relevant goal rather than saving them without a visible reason.
 - After acting, inspect the next observation and update priorities.
 
 ## Tool and rule discipline
