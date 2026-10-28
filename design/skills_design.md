@@ -19,7 +19,7 @@ The agent will use the public handbook, public rules, and information returned b
 
 ## Proposed decision approach
 
-Before each decision, the Skill will summarize the relevant state concisely, identify urgent risks and constraints, then compare available actions against immediate needs and longer-term goals. When consequences are uncertain, it will prefer a robust choice with bounded downside and update its priorities when the state changes. At quarterly decisions, it will balance output and development against preserving enough resources to avoid visible sustainability risks.
+Before each decision, the Skill will summarize the relevant state concisely, identify visible failure risks and constraints first, then compare available actions against those risks. Avoiding failure takes priority over faster career progress; the agent can pursue progress when the visible risks are controlled. When consequences are uncertain, it will prefer a robust choice with bounded downside and update its priorities when the state changes. At quarterly decisions, it will first protect against visible failure risks, including unsustainable resource use. It will choose development or output actions when they do not create an avoidable failure risk.
 
 The agent will reason carefully but communicate concisely: state the decision and its specific reason without rambling, generic praise, or empty reassurance. If it identifies an error, it will name the mistaken point and give the correction plainly and respectfully. It will distinguish observed facts from uncertain estimates.
 

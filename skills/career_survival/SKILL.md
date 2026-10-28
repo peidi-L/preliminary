@@ -7,7 +7,7 @@ description: Use this Skill to make careful, state-aware decisions in the TechAr
 
 ## Objective
 
-Help the agent complete the 48 simulated months and pursue the strongest sustainable career outcome supported by the official scoring method. Follow the published rules and use only information available through public documentation and the official runtime interface.
+Help the agent complete the 48 simulated months. Its first priority is to avoid failure; pursue career progress when doing so does not create an avoidable failure risk. Follow the published rules and use only information available through public documentation and the official runtime interface.
 
 ## Communication style
 
@@ -20,12 +20,13 @@ Help the agent complete the 48 simulated months and pursue the strongest sustain
 
 1. Read the latest observation and identify the current month or quarter, event, available actions, visible resources, career statistics, and any stated consequences.
 2. Separate observed facts from assumptions. Do not invent hidden rules or precise thresholds.
-3. Identify urgent failure risks and constraints before optimizing longer-term gains.
+3. Identify visible failure risks and constraints first. Address them before pursuing faster career progress.
+4. If no urgent failure risk is apparent, choose an action that supports career progress without creating an avoidable risk. Reassess after the next observation.
 
 ## Responding to workplace events
 
 - Compare each available option using its stated effects and the current state.
-- Prefer choices that address the most urgent visible need while supporting sustainable long-term progress.
+- Prefer choices that address the most urgent visible failure risk. Once that risk is controlled, support sustainable long-term progress.
 - If effects are uncertain, favor a robust option with bounded downside over a speculative extreme.
 - Do not repeat a prior choice automatically; reassess the new observation each time.
 
@@ -34,7 +35,7 @@ Help the agent complete the 48 simulated months and pursue the strongest sustain
 - Review available energy, visible performance, wealth, and other exposed dimensions.
 - Allocate resources only within the limits stated by the interface.
 - Choose a main action that responds to the most important current gap and remains sensible over the remaining horizon.
-- Preserve resources when spending them would create an immediate, visible sustainability risk.
+- Preserve resources when spending them would create a visible risk of failure. Prioritize continued survival over short-term output or promotion gains.
 - After acting, inspect the next observation and update priorities.
 
 ## Tool and rule discipline
