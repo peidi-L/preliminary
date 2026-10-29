@@ -8,116 +8,107 @@ Our first aim is to finish the simulation without failure. When there is no urge
 
 ## 1. Input from the simulation
 
-The first part of development is to understand exactly what information the simulation gives to the agent. We will inspect the public handbook and the schemas returned by the official CLI and MCP tools. We expect the useful input to include:
+The agent will use `observe(session_id)` to read the current state, event, and choices. The public handbook lists these visible statistics: `Health`, `Dignity`, `Skill`, `Network`, `Level`, `Output`, `Wealth`, `Energy`, and `CurrentLevelDuration`.
 
-- the current month, quarter, and decision stage;
-- the current workplace event and the choices that are allowed;
-- visible statistics, including any values provided for health, dignity, skills, relationships, productivity, wealth, energy, or performance;
-- the visible cost or effect of each action;
-- the result of the previous action;
-- tool errors, missing fields, and other limits shown by the interface.
+We will keep a short state summary with the session ID, current time and stage, returned statistics, available choices, warnings, and the previous result. Action costs and effects will come from the public rules or current observation. Anything else will stay unknown or be marked as an estimate.
 
-The exact field names and data types will be taken from the official tool schemas. We will not invent fields or assume that a value is available when the interface does not provide it.
-
-The input will be changed into one short internal state:
+Our internal summary will contain:
 
 ```text
 current_state = {
-  time,
-  decision_stage,
+  session_id,
+  time_and_stage,
   visible_statistics,
-  current_event,
-  available_actions,
-  visible_costs_and_effects,
-  previous_result,
+  event_and_choices,
+  stated_costs_and_effects,
+  warnings_and_recent_changes,
   unknown_information
 }
 ```
 
-This gives the decision process a consistent input even if different MCP tools return information in different formats.
+These labels define our own summary. During integration, we will check the actual response fields and types against the official interface before using them.
 
 ## 2. Agent architecture
 
-We will use one agent in JiuwenSwarm. The agent will have the following parts:
+We will use one agent in JiuwenSwarm. Its decision process has six stages:
 
 1. **Input reader:** reads the latest MCP response and builds `current_state`.
 2. **Risk check:** checks the visible state for an immediate failure risk or an unsustainable use of resources.
 3. **Decision planner:** compares only the actions currently allowed by the simulation. It deals with urgent risks first. If there is no urgent risk, it chooses a low-risk action that makes useful progress.
-4. **Tool selector:** chooses the correct official MCP tool and prepares its required arguments.
+4. **Tool selector:** uses the official MCP interface to observe, act, or check recent results.
 5. **Output checker:** checks that the tool name, action, and arguments match the published schema before making the call.
 6. **Result checker:** reads the tool response, confirms whether the action worked, and updates the state for the next decision.
 
-The agent will not make one fixed plan for all 48 months. It will reassess after every event because the state and available actions can change.
+These are stages within one agent. After each action, it will read the new state and reassess. Once the interface reports that the run has ended, it will stop taking actions and record the confirmed result.
 
 ## 3. MCP tools
 
-After setting up the official environment, we will record each public MCP tool in a small tool list containing:
+The public documentation lists five tools:
 
-- tool name;
-- what the tool does;
-- when it can be used;
-- required and optional arguments;
-- expected response format;
-- how to handle an error.
+| Tool | Planned use |
+| --- | --- |
+| `new_game()` | Start a run when one is requested and no session has been supplied. |
+| `observe(session_id)` | Read the current situation and choices. |
+| `take_action(session_id, choice, notes)` | Submit a workplace or quarterly choice and a short decision note. |
+| `check_latest_logs(session_id, count=10)` | Check recent results or warnings when the observation needs clarification. |
+| `show_employee_handbook()` | Read the public handbook when needed. |
 
-The tool selector will use this list to match a task to the correct tool. For example, an event decision should use the official event-action tool, while a quarterly resource or main-action decision should use the relevant quarterly tool. The exact tool names and arguments will come from the official MCP schemas and will not be guessed or hard-coded from hidden data.
+Both workplace events and quarterly decisions use `take_action`. The current observation determines the available choice. We will check argument types and allowed values against the exposed tool schemas. An existing session will be kept throughout the run; the agent will not start a new game to replace a poor result.
 
 ## 4. Decision method
 
 For each decision, the agent will:
 
-1. read and summarise the confirmed input;
-2. list the actions that the simulation currently allows;
-3. check for visible failure risks;
-4. remove actions that are invalid or create an avoidable serious risk;
-5. compare the remaining actions using their visible costs, effects, and the time left;
-6. choose the safest useful action;
-7. call the correct tool and check its response.
+1. read the latest state and check whether the run has ended;
+2. identify the choices allowed at the current stage;
+3. check warnings and worsening statistics for signs of failure risk;
+4. compare valid choices using their stated costs, likely effects, and the time left;
+5. deal with urgent risks first, then choose useful progress with limited downside;
+6. submit one choice, check the result, and update the state.
 
-Avoiding failure comes first. When the visible state is safe, the agent should use available resources to make steady progress instead of saving them without a reason. If the effects are uncertain, it should prefer an action with a clearer result and a smaller downside. Estimates must be marked as estimates.
+Risk checks will cover the published failure directions, including poor health, sustained low dignity, weak performance, and persistent problems with wealth, skills, or relationships. The agent will use warnings and trends without assuming hidden thresholds. If every valid choice carries risk, it will choose the least harmful valid option based on the available information.
+
+At quarterly decisions, the agent will check the remaining `Energy` and the action costs. Unused Energy expires at the end of the quarter, so it should use it for recovery or useful progress when the available action is sensible. It should still avoid spending it on an action that worsens an urgent problem. Main actions and performance feedback will be considered alongside the remaining time in the run.
 
 ## 5. Output to the simulation
 
-The final output must connect correctly to the simulation interface. Internally, the agent will create a decision containing:
+The decision will be sent through `take_action(session_id, choice, notes)`. The `choice` must be valid for the current observation. The `notes` will briefly state the reason and main risk, using the format accepted by the tool schema.
 
-```text
-decision = {
-  selected_action,
-  selected_tool,
-  tool_arguments,
-  short_reason,
-  expected_risk
-}
-```
-
-Before sending it, the output checker will confirm that the selected action is currently available and that all required arguments match the MCP schema. The external output will then be the valid MCP tool call required by the simulation. The agent will not claim that an action worked until the tool response confirms it.
+Before each call, the agent will check the session, current stage, required arguments, and accepted types. It will send one action at a time and inspect the response before continuing. If a timeout leaves the result unclear, it will use `observe` and, if needed, recent logs before deciding whether to retry. This avoids applying the same action twice.
 
 ## 6. Model and API connection
 
-The organisers provide an API key for the designated competition model after they approve the preliminary submission. JiuwenSwarm will use that model for the agent's reasoning. We will configure only the values allowed by the official instructions:
+JiuwenSwarm will connect to the designated competition model using the details supplied by the organisers. During setup, we will put the following values in the local `.env` file and use the official setup process to configure the runtime:
 
 - `API_BASE`
 - `API_KEY`
 - `MODEL_NAME`
 
-The API key will be stored in the local environment and will not be written in the Skill, source files, ZIP, or GitHub repository. The model name and endpoint will be copied from the organisers' email instead of guessed. The official MCP tools will connect the agent to the simulation, while the model API will provide the reasoning used to choose an action.
+The runtime handles the model connection. The Skill does not need to read the API key or environment files. Credentials will stay out of prompts, agent notes, submitted logs, the ZIP, and GitHub. We will use the exact endpoint and model name supplied by the organisers and leave provider routing under their control.
 
 ## 7. Skill and communication style
 
 The preliminary design uses one Skill: `career_survival`. It contains the decision process, tool rules, failure handling, and output checks.
 
-The agent should think through the choices but keep its explanation short. It should state the chosen action and the exact reason. If something is wrong, it should say what is wrong and give the correction without adding generic praise or reassurance.
+Decision notes should be short: the chosen action, the evidence for it, and its main risk. They should distinguish confirmed information from estimates.
 
 ## Main risks
 
-- **The input schema may be misunderstood.** Use the official schemas and test responses before relying on a field.
-- **An action may be sent in the wrong format.** Validate the tool name and arguments before every call.
-- **A choice may have delayed effects.** Read the new state after every action and update the plan.
-- **Missing information may lead to guessing.** Separate confirmed values from estimates and do not invent hidden rules or thresholds.
-- **Resources may be used too quickly.** Check the visible costs, current risks, and time left before spending them.
-- **Tool or API calls may fail.** Check the returned status and retry only when the official interface shows that retrying is valid.
-- **Long prompts may waste the API budget.** Keep the state summary and reasoning focused on the current decision.
+- **Misreading the input or action format.** Check fields, types, and available choices against the public interface.
+- **Missing delayed effects.** Review warnings and changes after each action, including persistent weakness in a statistic.
+- **Guessing hidden mechanics.** Use public rules and current-run feedback without turning an observed pattern into a fixed rule.
+- **Spending resources poorly.** Check costs and risks while accounting for Energy that expires each quarter.
+- **Repeating an action after a timeout.** Confirm the current state before resending a call whose result is unclear.
+- **Using too many tokens.** Keep state summaries and notes short, and read logs only when needed.
 
 ## Development plan
 
-We plan to use JiuwenSwarm 0.2.4b3 in single-agent mode (`mode: agent`) with the official public CLI and MCP interfaces. After receiving the API key, we will install the official environment, inspect every public input and output schema, build the tool list, run local tests with permitted development data, and update the Skill from the test results. We will not inspect internal package data, use hidden evaluation information, or try to manipulate the evaluation.
+We plan to use JiuwenSwarm 0.2.4b3 in single-agent mode (`mode: agent`). This is a proposed design; gameplay results are not yet available. After setup, we will verify the public schemas, test state handling and action validation, then run the permitted development data and revise the Skill from those results. Questions about unclear rules will go to the organisers before we use the disputed method. Simulation access will stay within the official MCP tools and public CLI for manual testing.
+
+## Public references
+
+- [Preliminary requirements and API setup](https://techarena-career-sim.readthedocs.io/en/latest/api-key.html)
+- [Official MCP tools](https://techarena-career-sim.readthedocs.io/en/latest/mcp.html)
+- [Public handbook](https://techarena-career-sim.readthedocs.io/en/latest/handbook.html)
+- [Published action rules](https://techarena-career-sim.readthedocs.io/en/latest/rules.html)
+- [Failure directions](https://techarena-career-sim.readthedocs.io/en/latest/failure-and-ending.html)
